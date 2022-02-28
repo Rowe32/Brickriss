@@ -70,7 +70,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("/assets/Hintergrund-Spiel.jpg");
+    background-image: url("/assets/gameboard-background-resized.jpg");
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -88,10 +88,15 @@ body {
 }
 
 .game-over h2 {
-    color: black;
     font-size: 5rem;
     text-transform: uppercase;
     letter-spacing: 0.3em;
+    background-color: white;
+}
+
+.game-over p {
+    font-size: 2rem;
+    background-color: white;
 }
 
 .game-over button {
