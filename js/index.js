@@ -103,17 +103,13 @@ class Brick {
     }
 
     draw() {
-        this.y += 1;                //  alternativley: move it down inside the update function
-        if (this.onGround())  {         //hier ebenfalls zweiter check!
+        this.y += 1;               
+        if (this.onGround())  {                                 //hier ebenfalls zweiter check!
             this.y = height - brickHeight;
         }
         //only if this.y is above ground this gets picutred on canvas           
         image(this.image, this.x, this.y, this.w, this.h);   
     }
-
-    // update() {
-    //     //const every300Frames = frameCount % (60 * 5) === 0;
-    // }
 
     onGround() {
         // Check if brick touches the ground:
@@ -121,26 +117,30 @@ class Brick {
         return brickBottom >= height
     }
  
-    collidesWith() { //mit anderem brick...
+    collidesWith() {
+        const brickBottom = this.y + this.h;
+        return 
+        //check for collision with all other bricks:
+
+        //check if center of brick at enough distance to other bricks?
+
+        // bricks.array....
 
 
          //.find returns either found element or undefined, to do a boolean conversion::
          // return !!bricks.array.find((brick)=> collision(ground, bricks));
 
+         // function collision(brick1, brick2) {
+        //     it's the idea of an AABB - axis aligned bounding box collision for non-rotated rectangles
+        //   return (
+        //     rect1.x < rect2.x + rect2.w &&
+        //     rect1.x + rect1.w > rect2.x &&
+        //     rect1.y < rect2.y + rect2.h &&
+        //     rect1.h + rect1.y > rect2.y
+        //   );
+        // }
 
     }
-
-// function collision(brick1, brick2) {
-//     it's the idea of an AABB - axis aligned bounding box collision for non-rotated rectangles
-//   return (
-//     rect1.x < rect2.x + rect2.w &&
-//     rect1.x + rect1.w > rect2.x &&
-//     rect1.y < rect2.y + rect2.h &&
-//     rect1.h + rect1.y > rect2.y
-//   );
-// }
-
-
 }
 
 class Cell {
@@ -163,24 +163,19 @@ class Cell {
 
 // }
 
-/* function toggleGameOver() {          //siehe Spiel von Joshua
+function toggleGameOver() {          //siehe Racecar Rico
     // stop the draw loop
     noLoop();
   
     // change the CSS so that the game over screen shows and the board hides
-    const gameOverElement = document.querySelector(".game-over");
-    gameOverElement.style.display = "flex";
-    const gameBoardElement = document.getElementById("game-board");
-    gameBoardElement.style.display = "none";
-    // also update the game score element on the game over screen with the final score
-    const scoreElement = document.querySelector(".game-over span");
-    scoreElement.innerText = obstacles.score;
-  
+    gameOver.style.display = "flex";
+    gameBoard.style.display = "none";
+
     // reset the game state to start from fresh again
-    car = new Car(img);
-    obstacles = new Obstacles();
-  }
- */
+        //new brick, empty array...
+   
+}
+
 
 //loading the window and showing the first screen and hiding the other two to start
 window.addEventListener("load", () => {
@@ -202,20 +197,13 @@ window.addEventListener("load", () => {
         gameIsOver = false;
     
         //loop is used to start the game again after the gameover screen stops it
-
-        
-        /* objectArray = [
-        { x: sharkX, y: sharkY },
-        { x: sharkX + 800, y: sharkY + 200 },
-        { x: sharkX + 1400, y: sharkY + 400 },
-        ];
-        loop(); */
+        loop();
     });
 
     //just a button to simulate that the game is over
-  /*   gameOverBtn.addEventListener("click", () => {
+    gameOverBtn.addEventListener("click", () => {
         gameIsOver = true;
 
         //hide p5js
-    }); */
+    });
 })
