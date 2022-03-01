@@ -9,28 +9,33 @@ let gameOver = document.querySelector(".game-over");
 //buttons
 let startBtn = document.querySelector("#start-btn");
 let restartBtn = document.querySelector("#restart-btn");
-let gameOverBtn = document.querySelector("#gameover-btn");                      // nur zumTest
+let gameOverBtn = document.querySelector("#gameover-btn");       // nur zumTest
 
 //setting up all variables:
-let wallWidth;
-let wallHeight;
+let wallWidth, wallHeight;
 let brickWidth = 40;
 let brickHeight = 20;
-let brick;
-let board = [];
+let brickImg1, brickImg2, brickImg3, brickImg4;
+
+let board = [];             // nötig am Ende?
 let bricks = [];
-let startVelocity = 20;                                                     //frameRate -> increase later on
+let lockedBricks = [];
+let collision;
+let startVelocity = 50;  //frameRate -> to increase later on
+
 
 //load all images upfront:
 function preload() {
-    brickImg = loadImage("/assets/Brick1.jpg");                             //later: random ARRAY of pictures?
+    brickImg1 = loadImage("/assets/Brick1-resized.jpg");
+    brickImg2 = loadImage("/assets/Brick2-resized.jpg");
+    brickImg3 = loadImage("/assets/Brick3-resized.jpg");
+    brickImg4 = loadImage("/assets/Brick4-resized.jpg");
 }
 
-
 function setup() {  
-    frameRate(startVelocity);  
-    let wall = createCanvas(400, 200);
-    //wall.position(300, 159, 'fixed');   // fix canvas inside gap, aber nicht responsive..ändert sich mit größe browser
+    frameRate(startVelocity);  //nach Zeit oder gelöschten Reihen oder ANzahl Steine insgesamt...steigt Tempo...!
+    let wall = createCanvas(320, 200);
+    //wall.position(300, 159, 'fixed');  fix canvas inside gap, aber nicht responsive..ändert sich mit größe browser
     //https://p5js.org/reference/#/p5.Element/position
     wall.parent('canvasContainer');
 
@@ -39,66 +44,111 @@ function setup() {
     // height of canvas divided by heigth of bricks = height
     wallHeight = floor(height/brickHeight);
 
-    //init the wall ->                                    BRAUCHT tuviel ZEIT _ MIT SYNCHRONIZE....brauche ich grid mit cells am ende???
+    //init the wall ->                                    ....brauche ich grid mit cells am ende???
     for(let j = 0; j < wallHeight; j++) {
         for (let i = 0; i < wallWidth; i++) {
             let cell = new Cell(i,j);
-            board.push(cell); //array of all cells
-            // bspw.->  0: Cell {i: 0, j:0, show: f}
-            // 100 cells in total...bei der canvas größe 400, 200!
+            board.push(cell); 
+            // //array of all cells ->  0: Cell {i: 0, j:0, show: f}
+            
         }
     }
-
-    //init the first "last" Brick
-    bricks.push(new Brick(brickImg));
+    //init the first "last" Brick inside Brick array
+    bricks.push(new Brick(brickImg1));                          //same as = newBrick ()??
 }
 
 function draw() {
-    background(142, 126, 108);                          // if empty,background(), Canvas is transparent!!!
+    background(142, 126, 108);                          // if empty, background(), Canvas is transparent!!!, dann nur den Rand zeigen with stroke and strokeweight...
     //for-loop to see the board - NOT necessary -> delete in the end!!
     for (let i = 0; i < board.length; i++) {
         board[i].show();                            
     }
 
-    //all bricks inside the bricks array need to be displayed on canvas:
-    bricks.forEach((brick)=> {
-        brick.draw();
-    });
+    //Display all Bricks on Canvas:
+    bricks.forEach( (brick) => brick.draw() );
 
+    //a new brick starts to fall, once the previous one is on Ground or on top of another one:
     const brick = bricks[bricks.length - 1];
-    if (brick.onGround() || brick.collidesWith(bricks)) {
+    brick.move();
+
+    lockedBricks = bricks.slice(0, bricks.length - 1);
+    collision = brick.collidesWith(lockedBricks);
+    if ( brick.onGround() || collision.booleanResult ) { 
+        if (collision.booleanResult && (brick.x === collision.brick.x)) {
+            brick.y = collision.brick.y - brickHeight;       
+        }
         //create new brick at the end of array:
-        bricks.push(new Brick(brickImg));
-        //                                                          hier vllt randomisierte Bilder einbauen...??
+        newBrick();
     };
 
 
-    // check for gameover if....-> gameIsOver = true;
-    // der letzte stein oben aufliegt/ankommt...zuende!
+    //ab hier eine function, die selbstständig stehen kann:
+    //check for baseline row filled: (Game is for now constructed in a way that only the bottom can be filled)
+    let bricksOnBaseline = 0;
+    lockedBricks.forEach( brick => {
+        if (brick.y === 180) bricksOnBaseline++;
+    });
+    //es muss auch bricks geändert werden weil diese gezeigt werden, siehe oben
+    //Take out all of these bricks out of bricks array and --> automatically also lockedbricks.array:
+    //ich darf nicht letzten stein aus bricks nehmen,,,,!!! aber beide arrays ändern??
+    //Workaround: bricks = last one of bricks und geänderterfallenbricks?
+    if (bricksOnBaseline === 8) {
+        lockedBricks = lockedBricks.filter( brick => brick.y !== 180);
+        // später hier noch SOUND einfügen: "FREEDOM" & the hoff erscheint (< 3 sec snippit)?? oder aufleuchten...
 
-    // dann am ende nochmal check:
+        bricks = bricks.filter( brick => brick.y !== 180);
+        // why does this not work? throws an error at draw...zu schnell? in der zeit noch nicht gerechnet
+        //changes the whole element not just the y property...
+
+        // bricks = bricks.filter( brick => brick.y !== 180).map(remainingBrick => remainingBrick.y += brickHeight);
+
+        console.log(lockedBricks);
+
+        //take everything else a notch down:
+
+        // lockedBricks = lockedBricks.forEach(remainingBrick => remainingBrick.y += brickHeight); // oder nur LockedBricks??? //löscht alle!
+        // bricks = bricks.forEach(remainingBrick => remainingBrick.y += brickHeight);
+        // console.log(lockedBricks); //changes the whole array
+         // brauch ich diese Zeile?
+    } 
+       
+
+    if (lockedBricks.length > 10 && lockedBricks[lockedBricks.length - 1].y === 0) {
+        endingTheGame(); // oder gameIsOver = true;
+    }
+   
+    // dann am ende nochmal check: // brauch ich das?? brauch ich gameIs true??:::
     if (gameIsOver) {
         endingTheGame();
     };
 }
 
+function newBrick () {
+    let imageArray = [brickImg1, brickImg2, brickImg3, brickImg4];
+    let randomImg = imageArray[Math.floor(Math.random() * imageArray.length)];
+    bricks.push(new Brick(randomImg));                                              // oder lenkt das zu sehr ab?!
+}
+
 function keyPressed() {
-    // moving brick without moving it offboard:
+    // moving brick without moving it off canvas:
     const brick = bricks[bricks.length - 1]; //always last element of array (hence, the active brick!)
+
+    // check for collision with other bricks left or right:
+    collision = brick.collidesWith(lockedBricks);
 
     //Left Arrow
     if (keyCode === 37) {
-        if (brick.x > 0) {
+        if ((brick.x > 0) && !(collision.booleanResult && (brick.y === collision.brick.y))) { // wie check nur nach collision on x???
             brick.x -= brickWidth;
         }
     }
 
     // Right Arrow
     if (keyCode === 39) {
-        if (brick.x < width - brickWidth) {
+        if ((brick.x < width - brickWidth) && !(collision.booleanResult && (brick.y === collision.brick.y))) { 
             brick.x += brickWidth;
-        }
-    }
+        };
+    };
 }
 
 class Brick {
@@ -114,15 +164,14 @@ class Brick {
         // wenn Tasten gedrückt halten auch schneller hin und her bewegen???
     }
 
-    draw() {
-        this.y += 1;                                                 // oder doch nur brickHeight Schritte machen?
-        if (this.onGround())  {
-            this.y = height - brickHeight;
-        } else if (this.collidesWith(bricks)) {
-            this.y -= brickHeight;
-        }
-        //only if this.y is above ground or above other bricks this brick gets displayed on canvas           
-        image(this.image, this.x, this.y, this.w, this.h);   
+    
+    move() {
+        //to be able to call movement only for the active brick:
+        this.y += 1;     
+    }
+    
+    draw() {        
+        image(this.image, this.x, this.y, this.w, this.h);   //this should happens for all bricks
     }
 
     onGround() {
@@ -131,24 +180,22 @@ class Brick {
         return brickBottom >= height;
     }
  
+
+    //check for collision with all other fallen bricks:
     collidesWith(bricks) {
-        //check for collision with all other bricks:
-        //Rico : .find returns either the found element or undefined, we need to do a boolean conversion with (!!)
-        return !!bricks.find((otherBricks) => collision(otherBricks, this));
+        const collidingBrick = bricks.find((otherBricks) => collisionCheck(this, otherBricks));
+        return {brick : collidingBrick, booleanResult : !!collidingBrick};
     }
 }
 
-function collision(rect1, rect2) {
-    // AABB - axis aligned bounding box collision for non-rotated rectangles:
+function collisionCheck(rect1, rect2) {
     return (
+        rect1.y < rect2.y + rect2.h && 
+        rect1.h + rect1.y > rect2.y && 
         rect1.x < rect2.x + rect2.w && 
-        rect1.x + rect1.w > rect2.x &&
-        rect1.y < rect2.y + rect2.h &&
-        rect1.h + rect1.y > rect2.y
+        rect1.x + rect1.w > rect2.x
     );
 }
-
-
 
 //brauch ich das am Ende??
 class Cell {
@@ -156,16 +203,15 @@ class Cell {
         this.i = i;
         this.j = j;
 
-    this.show = function () {
-        let x = this.i*brickWidth; //x-koordinate for this cell
-        let y = this.j*brickHeight;
-        stroke(255);
-        noFill();
-        rect(x, y, brickWidth, brickHeight); //for Each cell a rectangle
+        this.show = function () {
+            let x = this.i*brickWidth; //x-koordinate for this cell
+            let y = this.j*brickHeight;
+            stroke(255);
+            noFill();
+            rect(x, y, brickWidth, brickHeight); //for Each cell a rectangle
+        }; 
     };
-};
 }
-
 
 // function increaseVelocity() {
 
@@ -189,6 +235,17 @@ window.addEventListener("load", () => {
         gameIntro.style.display = "none";
         gameBoard.style.display = "flex";
         gameOver.style.display = "none";
+
+        /* 
+        if (timerId) {
+            timerId 0 null
+        } else {
+            draw()
+            timerId = setInterval.....
+        }
+        }
+        
+        */
     });
   
     //listener on the RE-START button to hide the GAME OVER screen and show the game canvas
@@ -198,9 +255,9 @@ window.addEventListener("load", () => {
         gameOver.style.display = "none";
         gameIsOver = false;
     
-        // reset the game state to start from fresh again               // ggf. auch Geschwindigkeit zurück setzen
-        let bricks = [];
-        bricks.push(new Brick(brickImg));
+        // reset the game state to start from fresh again   and all important variables.           // ggf. auch Geschwindigkeit zurück setzen
+        bricks = [];
+        newBrick();
         // and start the draw() loop from p5
         loop();
     });
