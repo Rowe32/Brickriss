@@ -1,5 +1,4 @@
-//gameover & sound start as false
-let gameIsOver = false;                         //brauch ich das am Ende?
+//sound start as false
 let soundInGame = false;
 
 //all screens
@@ -8,11 +7,11 @@ let gameBoard = document.querySelector(".game-board");
 let gameOver = document.querySelector(".game-over");
 //Screen Text am Ende
 let gameOverText = document.querySelector("#endOfGame")
+let bricksDeleted = document.querySelector('#bricksDeleted')
 
 //buttons
 let startBtn = document.querySelector("#start-btn");
 let restartBtn = document.querySelector("#restart-btn");
-let gameOverBtn = document.querySelector("#gameover-btn");       // nur zumTest
 let soundBtn = document.querySelector("#music-Btn");
 
 //setting up all variables:
@@ -21,10 +20,11 @@ let brickWidth = 40;
 let brickHeight = 20;
 let brickImages = [];
 
-let board = [];             // nötig am Ende?
+let board = [];             	         // nötig am Ende?
 let bricks = [];
 let lockedBricks = [];
-let startSpeed = 1.5;  //frameRate -> to increase later on
+let startSpeed = 1.5;
+let brickScore = 0;
 
 //SOUNDS & Music
 let song;
@@ -63,9 +63,7 @@ function setup() {
     for(let j = 0; j < wallHeight; j++) {
         for (let i = 0; i < wallWidth; i++) {
             let cell = new Cell(i,j);
-            board.push(cell); 
-            // //array of all cells ->  0: Cell {i: 0, j:0, show: f}
-            
+            board.push(cell);
         }
     }
     
@@ -74,7 +72,7 @@ function setup() {
 }
 
 function draw() {
-    background(142, 126, 108);                              // FARBE ÄNDERN
+    background(142, 126, 108);                                          // FARBE ÄNDERN
 
     //for-loop to see the board - NOT necessary -> delete in the end!!
     //  RASTER
@@ -89,74 +87,74 @@ function draw() {
     const brick = bricks[bricks.length - 1];
     brick.move();
 
-    lockedBricks = bricks.slice(0, bricks.length - 1); //wird in jedem Drawloop geupdated
+    //All bricks except the one which is moving
+    lockedBricks = bricks.slice(0, bricks.length - 1);
     const collision = brick.collidesWith(lockedBricks);
 
+    // reset height of stones to baseline or check for collision on top of other bricks:
     if ( brick.onGround() || collision.booleanResult ) { 
         if (collision.booleanResult && (brick.x === collision.brick.x)) {
             brick.y = collision.brick.y - brickHeight;       
-        } else {                            // same as brick.onGround()
+        } else {
             brick.y = height - brickHeight;
         }
         if (soundInGame) {
             stoneSound.play();
             stoneSound.setVolume(0.3);
         }
-        
         //create new brick at the end of array:
         newBrick();
     };
-       
+    
+    //Delete full row:
     deleteFullBaseline();
 
     // GAME OVER CHECK:
     if (lockedBricks.length > 10 && lockedBricks[lockedBricks.length - 1].y === 0) {
-        endingTheGame(); // oder gameIsOver = true;
+        endingTheGame();
         if (soundInGame) {
             cry.play();
             cry.setVolume(0.3);
         }
     }
-   
-    // dann am ende nochmal check: // brauch ich das?? brauch ich gameIs true??:::
-    if (gameIsOver) {
-        endingTheGame();
-        
-    };
 }
 
 function deleteFullBaseline() {
-    //check for baseline row filled: (Game is for now constructed in a way that only the bottom can be filled)
+    //check if baseline row is filling up:
     let bricksOnBaseline = 0;
     lockedBricks.forEach( brick => {
         if (brick.y + brickHeight === 200) bricksOnBaseline++;
         console.log(bricksOnBaseline);
     });
     
+    //if row is full - delete:
     if (bricksOnBaseline === wallWidth) {
         bricks = bricks.filter( brick => brick.y !== 180);
+        bricks.slice(0, bricks.length - 1).forEach(remainingBrick => remainingBrick.y += brickHeight);
         
-        bricks.slice(0, bricks.length - 1).forEach(remainingBrick => remainingBrick.y += brickHeight); // forEach gibt nichts zurück!!!
-        //Höhe falsch - order andersrum
         if (soundInGame) {
-            rubbleSound.play();  // + the hoff erscheint oder aufleuchten der reihe...
+            rubbleSound.play();                      // + the hoff erscheint oder aufleuchten der reihe...
         }
+        //change Score
+        brickScore += 6; 
+        bricksDeleted.innerText = `Bricks: ${brickScore}`;
+
+        //for each deleted row, increase speed gradually;
         startSpeed += 0.2;
-        bricksOnBaseline = 0;
     } 
 }
 
 
 function newBrick () {
     let randomImg = brickImages[Math.floor(Math.random() * brickImages.length)];
-    bricks.push(new Brick(randomImg));                                              // oder lenkt das zu sehr ab?!
+    bricks.push(new Brick(randomImg));
 }
 
 function keyPressed() {
-    // moving brick without moving it off canvas:
-    const brick = bricks[bricks.length - 1]; //always last element of array (hence, the active brick!)
+    // moving the brick without moving it off canvas:
+    const brick = bricks[bricks.length - 1];
 
-    // check for collision with other bricks left or right:
+    // check for collision while moving the brick left or right
     
     //Left Arrow
     if (keyCode === 37) {
@@ -185,13 +183,13 @@ class Brick {
     constructor(img) {
         this.w = brickWidth;
         this.h = brickHeight;
-        this.x = 120;                  //Mitte at beginning -> randomize later on!
+        this.x = 120;                           //-> randomize later on if starting at 80 or 120...
         this.y = 0;                           
         this.image = img;
     }
     
     move() {
-        //to be able to call movement only for the active brick:
+        //move the "active" brick:
         this.y += startSpeed;     
     }
     
@@ -221,18 +219,18 @@ function collisionCheck(rect1, rect2) {
     );
 }
 
-//brauch ich das am Ende??
+                                                    //brauch ich das am Ende?? oder lieber gitter malen?
 class Cell {
     constructor (i, j) {
         this.i = i;
         this.j = j;
 
         this.show = function () {
-            let x = this.i*brickWidth; //x-koordinate for this cell
+            let x = this.i*brickWidth;
             let y = this.j*brickHeight;
             stroke(255);
             noFill();
-            rect(x, y, brickWidth, brickHeight); //for Each cell a rectangle
+            rect(x, y, brickWidth, brickHeight);    //creates for Each cell a rectangle
         }; 
     };
 }
@@ -242,19 +240,21 @@ function endingTheGame() {
     gameIntro.style.display = "none";
     gameBoard.style.display = "none";
     gameOver.style.display = "flex";
-    
     gameOverText.style.visibility='hidden';
     noLoop();
+
     if (soundInGame) {
         song.stop();
     }
 
+    //display text a sec later:
     setTimeout(changeBg, 1000);
     setTimeout(changeText, 1500);
-    // +++ the HOFF
+                                                            // +++ the HOFF
 
 }
 
+//Change Background img & game over Sound
 function changeBg () {
     gameOver.style.backgroundImage = "url('/assets/GameOver_2.png')";
     if (soundInGame) {
@@ -279,6 +279,7 @@ window.addEventListener("load", () => {
         loop();
     });
   
+    //listener on the sound button to toggle sound on or off:
     soundBtn.addEventListener('click', function() {
         if(soundBtn.classList.contains("stop")) {
             soundBtn.className = "start";
@@ -299,17 +300,12 @@ window.addEventListener("load", () => {
         gameIntro.style.display = "none";
         gameBoard.style.display = "flex";
         gameOver.style.display = "none";
-        gameIsOver = false;
     
-        // reset the game state to start from fresh again   and all important variables.           // ggf. auch Geschwindigkeit zurück setzen
+        // reset the game to start:
         bricks = [];
         newBrick();
         startSpeed = 1.5;
         loop();
-    });
-
-    //just a button to simulate that the game is over
-    gameOverBtn.addEventListener("click", () => {
-        gameIsOver = true;
+        bricksDeleted = 0;              //funktioniert nicht, warum??
     });
 })

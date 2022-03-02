@@ -51,7 +51,7 @@ body {
     text-align: center;
 }
 
-.instructions button {
+.button {
     background-color: orange; /* oder rot/gelb? */
     font-size: 1rem;
     padding: 10px;
@@ -60,8 +60,12 @@ body {
     border: 3px solid;
 }
 
-.instructions button:hover {
+.button:hover {
     border: 3px solid white;
+}
+
+#music-Btn {
+    margin: 5rem 0;
 }
 
 .game-board {
@@ -75,6 +79,21 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+#score {
+    position: fixed;
+    top: 2em;
+    font-weight: bold;
+}
+
+#score > h2 {
+    font-family: 'Press Start 2P';
+}
+
+#score ul {
+    list-style: none;
+    padding-left: 0;
 }
 
 .game-over {
@@ -98,7 +117,7 @@ body {
 }
 
 .game-over h2 {
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P';
     font-size: 2.5rem;
     text-align: center;
     text-transform: uppercase;
@@ -111,18 +130,4 @@ body {
     max-width: 80vw;
     text-align: center;
     margin-top: -0.3em;
-}
-
-.game-over button {
-    background-color: orange;
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: bold;
-    border: 3px solid;
-    align-self: center; /* // funktioniert nicht!! */
-}
-
-.game-over button:hover {
-    border: 3px solid orange;
 }

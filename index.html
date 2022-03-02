@@ -13,6 +13,7 @@
   </head>
 
   <body>
+
 <!-- GAME INTRO -->
     <div class="game-intro">
 
@@ -24,7 +25,7 @@
           Use the arrow keys to move the falling bricks <b>left</b> or <b>right</b> to fit them into the gaps. It’s like Tetris – just with bricks!
           </p>
         <div id="button-container">
-        <button id="start-btn">Start Game</button>
+        <button class="button" id="start-btn">Start Game</button>
         </div>
       </div>
         
@@ -32,9 +33,15 @@
 
 <!-- GAME -->
     <div class="game-board" id="canvasContainer">
-      <button id="gameover-btn">Simulate Game over</button>
       <button id="music-Btn" class="stop"><img src="/assets/outline_volume_off_black_24dp.png" alt="symbol vol off"></button>
-      
+      <div id="score">
+        <h2>Score</h2>
+        <ul>
+          <li>Time:</li>
+          <li id="bricksDeleted">Bricks: 0</li>
+          <li>Level:</li>
+        </ul>
+      </div>
     </div>
   
 
@@ -43,7 +50,7 @@
       <div id="endOfGame">
         <h2>-Game Over-</h2>
         <p>30 years of cold war begin...</p>
-        <button id="restart-btn">Try Again</button>
+        <button class="button" id="restart-btn">Try again!</button>
       </div>
     </div>
 
