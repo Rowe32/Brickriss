@@ -1,42 +1,57 @@
-//gameover starts as false
-let gameIsOver = false;
+//gameover & sound start as false
+let gameIsOver = false;                         //brauch ich das am Ende?
+let soundInGame = false;
 
 //all screens
 let gameIntro = document.querySelector(".game-intro");
 let gameBoard = document.querySelector(".game-board");
 let gameOver = document.querySelector(".game-over");
+//Screen Text am Ende
+let gameOverText = document.querySelector("#endOfGame")
 
 //buttons
 let startBtn = document.querySelector("#start-btn");
 let restartBtn = document.querySelector("#restart-btn");
 let gameOverBtn = document.querySelector("#gameover-btn");       // nur zumTest
+let soundBtn = document.querySelector("#music-Btn");
 
 //setting up all variables:
 let wallWidth, wallHeight;
 let brickWidth = 40;
 let brickHeight = 20;
-let brickImg1, brickImg2, brickImg3, brickImg4;
+let brickImages = [];
 
 let board = [];             // nötig am Ende?
 let bricks = [];
 let lockedBricks = [];
-let startVelocity = 50;  //frameRate -> to increase later on
+let startSpeed = 1.5;  //frameRate -> to increase later on
+
+//SOUNDS & Music
+let song;
+let stoneSound;
+let rubbleSound;
+let cry;
+let squelch;
 
 
-//load all images upfront:
+//load all images & sounds upfront:
 function preload() {
-    brickImg1 = loadImage("/assets/Brick1-resized.jpg");
-    brickImg2 = loadImage("/assets/Brick2-resized.jpg");
-    brickImg3 = loadImage("/assets/Brick3-resized.jpg");
-    brickImg4 = loadImage("/assets/Brick4-resized.jpg");
+    brickImages[0] = loadImage("/assets/Brick1-resized.jpg");
+    brickImages[1] = loadImage("/assets/Brick2-resized.jpg");
+    brickImages[2] = loadImage("/assets/Brick3-resized.jpg");
+    brickImages[3] = loadImage("/assets/Brick4-resized.jpg");
+    bg = loadImage("/assets/GameOver_2.png");
+    song = loadSound("/sounds/POL-miracle-park-short.mp3");
+    stoneSound =loadSound("/sounds/stone-on-stone.mp3");
+    rubbleSound = loadSound("/sounds/Rubble-sound.mp3");
+    cry = loadSound("/sounds/let-me-out-of-here-1.mp3");
+    squelch = loadSound("/sounds/Squelch-Sound.mp3");
 }
 
 function setup() {
-    noLoop(); 
-    frameRate(startVelocity);  //nach Zeit oder gelöschten Reihen oder ANzahl Steine insgesamt...steigt Tempo...!
-    let wall = createCanvas(320, 200);
+    noLoop();
+    let wall = createCanvas(240, 200);
     //wall.position(300, 159, 'fixed');  fix canvas inside gap, aber nicht responsive..ändert sich mit größe browser
-    //https://p5js.org/reference/#/p5.Element/position
     wall.parent('canvasContainer');
 
     // Width of Canvas divided by length of bricks = width
@@ -53,13 +68,16 @@ function setup() {
             
         }
     }
-    //init the first "last" Brick inside Brick array
-    bricks.push(new Brick(brickImg1));                          //same as = newBrick ()??
+    
+    //init the first "last" Brick
+    newBrick();                          
 }
 
 function draw() {
-    background(142, 126, 108);                          // if empty, background(), Canvas is transparent!!!, dann nur den Rand zeigen with stroke and strokeweight...
+    background(142, 126, 108);                              // FARBE ÄNDERN
+
     //for-loop to see the board - NOT necessary -> delete in the end!!
+    //  RASTER
     for (let i = 0; i < board.length; i++) {
         board[i].show();                            
     }
@@ -71,52 +89,66 @@ function draw() {
     const brick = bricks[bricks.length - 1];
     brick.move();
 
-    lockedBricks = bricks.slice(0, bricks.length - 1); //wird in jedem Drasloop geupdated
+    lockedBricks = bricks.slice(0, bricks.length - 1); //wird in jedem Drawloop geupdated
     const collision = brick.collidesWith(lockedBricks);
+
     if ( brick.onGround() || collision.booleanResult ) { 
         if (collision.booleanResult && (brick.x === collision.brick.x)) {
             brick.y = collision.brick.y - brickHeight;       
+        } else {                            // same as brick.onGround()
+            brick.y = height - brickHeight;
         }
+        if (soundInGame) {
+            stoneSound.play();
+            stoneSound.setVolume(0.3);
+        }
+        
         //create new brick at the end of array:
         newBrick();
     };
        
     deleteFullBaseline();
 
+    // GAME OVER CHECK:
     if (lockedBricks.length > 10 && lockedBricks[lockedBricks.length - 1].y === 0) {
         endingTheGame(); // oder gameIsOver = true;
+        if (soundInGame) {
+            cry.play();
+            cry.setVolume(0.3);
+        }
     }
    
     // dann am ende nochmal check: // brauch ich das?? brauch ich gameIs true??:::
     if (gameIsOver) {
         endingTheGame();
+        
     };
 }
 
 function deleteFullBaseline() {
-    //ab hier eine function, die selbstständig stehen kann:
     //check for baseline row filled: (Game is for now constructed in a way that only the bottom can be filled)
     let bricksOnBaseline = 0;
     lockedBricks.forEach( brick => {
-        if (brick.y === 180) bricksOnBaseline++;
+        if (brick.y + brickHeight === 200) bricksOnBaseline++;
+        console.log(bricksOnBaseline);
     });
-    //es muss auch bricks geändert werden weil diese gezeigt werden, siehe oben
-    //Take out all of these bricks out of bricks array and --> automatically also lockedbricks.array:
-    //ich darf nicht letzten stein aus bricks nehmen,,,,!!! aber beide arrays ändern??
-    //Workaround: bricks = last one of bricks und geänderterfallenbricks?
-    if (bricksOnBaseline === 8) {
+    
+    if (bricksOnBaseline === wallWidth) {
         bricks = bricks.filter( brick => brick.y !== 180);
         
-        bricks.slice(0, bricks.length - 1).forEach(remainingBrick => remainingBrick.y += brickHeight); // gibt nichts zurück!!!
-
-        // später hier noch SOUND einfügen: "FREEDOM" & the hoff erscheint (< 3 sec snippit)?? oder aufleuchten...
+        bricks.slice(0, bricks.length - 1).forEach(remainingBrick => remainingBrick.y += brickHeight); // forEach gibt nichts zurück!!!
+        //Höhe falsch - order andersrum
+        if (soundInGame) {
+            rubbleSound.play();  // + the hoff erscheint oder aufleuchten der reihe...
+        }
+        startSpeed += 0.2;
+        bricksOnBaseline = 0;
     } 
 }
 
 
 function newBrick () {
-    let imageArray = [brickImg1, brickImg2, brickImg3, brickImg4];
-    let randomImg = imageArray[Math.floor(Math.random() * imageArray.length)];
+    let randomImg = brickImages[Math.floor(Math.random() * brickImages.length)];
     bricks.push(new Brick(randomImg));                                              // oder lenkt das zu sehr ab?!
 }
 
@@ -153,23 +185,18 @@ class Brick {
     constructor(img) {
         this.w = brickWidth;
         this.h = brickHeight;
-        this.x = 200;                                                      //at beginning -> randomize later on!
+        this.x = 120;                  //Mitte at beginning -> randomize later on!
         this.y = 0;                           
         this.image = img;
-
-        //later I can add velocity!!!( nimmt nach 2 min zu....oder nach soundsoviel gefallenen steinen
-        // if bricks.length > 20...> 40 > 60...wird alle 20 steine immer schneller)
-        // wenn Tasten gedrückt halten auch schneller hin und her bewegen???
     }
-
     
     move() {
         //to be able to call movement only for the active brick:
-        this.y += 1;     
+        this.y += startSpeed;     
     }
     
     draw() {        
-        image(this.image, this.x, this.y, this.w, this.h);   //this should happens for all bricks
+        image(this.image, this.x, this.y, this.w, this.h);
     }
 
     onGround() {
@@ -178,8 +205,7 @@ class Brick {
         return brickBottom >= height;
     }
  
-
-    //check for collision with all other fallen bricks:
+    //check for collision with all other bricks:
     collidesWith(bricks) {
         const collidingBrick = bricks.find((otherBricks) => collisionCheck(this, otherBricks));
         return {brick : collidingBrick, booleanResult : !!collidingBrick};
@@ -211,16 +237,33 @@ class Cell {
     };
 }
 
-// function increaseVelocity() {
-
-// }
 
 function endingTheGame() {
     gameIntro.style.display = "none";
     gameBoard.style.display = "none";
     gameOver.style.display = "flex";
-    // stop the draw loop that is running all the time
-    noLoop();    
+    
+    gameOverText.style.visibility='hidden';
+    noLoop();
+    if (soundInGame) {
+        song.stop();
+    }
+
+    setTimeout(changeBg, 1000);
+    setTimeout(changeText, 1500);
+    // +++ the HOFF
+
+}
+
+function changeBg () {
+    gameOver.style.backgroundImage = "url('/assets/GameOver_2.png')";
+    if (soundInGame) {
+        squelch.play();
+        squelch.setVolume(0.3);
+    }
+}
+function changeText () {
+    gameOverText.style.visibility='visible';
 }
 
 //loading the window and showing the first screen and hiding the other two to start
@@ -236,6 +279,21 @@ window.addEventListener("load", () => {
         loop();
     });
   
+    soundBtn.addEventListener('click', function() {
+        if(soundBtn.classList.contains("stop")) {
+            soundBtn.className = "start";
+            soundBtn.innerHTML = '<img src="/assets/outline_volume_up_black_24dp.png" alt="symbol vol on">';
+            soundInGame = true;
+            song.loop(); 
+            song.setVolume(0.1);
+        } else {
+            soundBtn.className = "stop";
+            soundBtn.innerHTML = '<img src="/assets/outline_volume_off_black_24dp.png" alt="symbol vol off">';
+            soundInGame = false;
+            song.stop();
+        }
+    });
+
     //listener on the RE-START button to hide the GAME OVER screen and show the game canvas
     restartBtn.addEventListener("click", () => {
         gameIntro.style.display = "none";
@@ -246,7 +304,7 @@ window.addEventListener("load", () => {
         // reset the game state to start from fresh again   and all important variables.           // ggf. auch Geschwindigkeit zurück setzen
         bricks = [];
         newBrick();
-        // and start the draw() loop from p5
+        startSpeed = 1.5;
         loop();
     });
 

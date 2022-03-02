@@ -18,6 +18,7 @@ body {
     background-image: url("/assets/Ulbricht-Bauarbeiter-resized.png");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
 }
 
 #instructions {
@@ -70,9 +71,10 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("/assets/gameboard-background-resized.jpg");
+    background-image: url("/assets/Hintergrund-Spiel_2.jpg");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
 }
 
 .game-over {
@@ -82,9 +84,17 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("/assets/neonbrand-XEsx2NVpqWY-unsplash.jpg");
+    background-image: url("/assets/GameOver_1.jpg");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
+}
+
+.game-over > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .game-over h2 {
@@ -93,16 +103,14 @@ body {
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    background-color: white;
-    padding: 20px;
     width: 80vw;
 }
 
 .game-over p {
     font-size: 2rem;
-    background-color: white;
-    padding: 20px;
     max-width: 80vw;
+    text-align: center;
+    margin-top: -0.3em;
 }
 
 .game-over button {
@@ -112,6 +120,7 @@ body {
     border-radius: 10px;
     font-weight: bold;
     border: 3px solid;
+    align-self: center; /* // funktioniert nicht!! */
 }
 
 .game-over button:hover {
