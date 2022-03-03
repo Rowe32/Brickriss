@@ -72,7 +72,7 @@ index.js
 ## Links
 
 ### Slides
-[Link Slides.com](http://slides.com)
+[https://docs.google.com/presentation/d/1p2frFQXVxyUVN-Lp3YFaEi38n0XIk-oIeZLOnFXgImg/edit?usp=sharing]
 
 ## Attribution
 
