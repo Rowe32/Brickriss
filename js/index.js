@@ -41,16 +41,16 @@ let squelch;
 
 //load all images & sounds upfront:
 function preload() {
-    brickImages[0] = loadImage("/assets/Brick1-resized.jpg");
-    brickImages[1] = loadImage("/assets/Brick2-resized.jpg");
-    brickImages[2] = loadImage("/assets/Brick3-resized.jpg");
-    brickImages[3] = loadImage("/assets/Brick4-resized.jpg");
-    bg = loadImage("/assets/GameOver_2.png");
-    song = loadSound("/sounds/POL-miracle-park-short.mp3");
-    stoneSound =loadSound("/sounds/stone-on-stone.mp3");
-    rubbleSound = loadSound("/sounds/Rubble-sound.mp3");
-    cry = loadSound("/sounds/let-me-out-of-here-1.mp3");
-    squelch = loadSound("/sounds/Squelch-Sound.mp3");
+    brickImages[0] = loadImage("assets/Brick1-resized.jpg");
+    brickImages[1] = loadImage("assets/Brick2-resized.jpg");
+    brickImages[2] = loadImage("assets/Brick3-resized.jpg");
+    brickImages[3] = loadImage("assets/Brick4-resized.jpg");
+    bg = loadImage("assets/GameOver_2.png");
+    song = loadSound("sounds/POL-miracle-park-short.mp3");
+    stoneSound =loadSound("sounds/stone-on-stone.mp3");
+    rubbleSound = loadSound("sounds/Rubble-sound.mp3");
+    cry = loadSound("sounds/let-me-out-of-here-1.mp3");
+    squelch = loadSound("sounds/Squelch-Sound.mp3");
 }
 
 
@@ -275,7 +275,7 @@ function endingTheGame() {
 
 //Change Background img & game over Sound
 function changeBg () {
-    gameOver.style.backgroundImage = "url('/assets/GameOver_2.png')";
+    gameOver.style.backgroundImage = "url('assets/GameOver_2.png')";
     if (soundInGame) {
         squelch.play();
         squelch.setVolume(0.3);
@@ -302,13 +302,13 @@ window.addEventListener("load", () => {
     soundBtn.addEventListener('click', function() {
         if(soundBtn.classList.contains("stop")) {
             soundBtn.className = "start";
-            soundBtn.innerHTML = '<img src="/assets/outline_volume_up_black_24dp.png" alt="symbol vol on">';
+            soundBtn.innerHTML = '<img src="assets/outline_volume_up_black_24dp.png" alt="symbol vol on">';
             soundInGame = true;
             song.loop(); 
             song.setVolume(0.1);
         } else {
             soundBtn.className = "stop";
-            soundBtn.innerHTML = '<img src="/assets/outline_volume_off_black_24dp.png" alt="symbol vol off">';
+            soundBtn.innerHTML = '<img src="assets/outline_volume_off_black_24dp.png" alt="symbol vol off">';
             soundInGame = false;
             song.stop();
         }

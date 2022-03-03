@@ -15,7 +15,7 @@ body {
     justify-content: flex-start;
     align-items:flex-start;
     flex-direction: column;
-    background-image: url("/assets/Ulbricht-Bauarbeiter-resized.png");
+    background-image: url("assets/Ulbricht-Bauarbeiter-resized.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -76,7 +76,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("/assets/Hintergrund-Spiel_2.jpg");
+    background-image: url("assets/Hintergrund-Spiel_2.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -105,7 +105,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("/assets/GameOver_1.jpg");
+    background-image: url("assets/GameOver_1.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

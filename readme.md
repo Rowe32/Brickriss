@@ -18,8 +18,8 @@ BRICKRISS is a game where the player has to move bricks falling down by pressing
 
 
 ## Backlog
-***
-* get rid of loading bug at beginning
+
+* get rid of loading bug at beginning (preload image of slowly falling brick...)
 * make css & html mobile responsive
 * add leaderboard
 * add time played inside the score -> to update level not only based on deleted bricks but also on time played
@@ -30,7 +30,7 @@ BRICKRISS is a game where the player has to move bricks falling down by pressing
 
 
 ## Data structure
-***
+
 index.js
 * preload() {}
 * setup() {}
@@ -46,8 +46,6 @@ index.js
 * changeText () {}
 
 ## States y States Transitions
-***
-Definition of the different states and their transition (transition functions)
 
 - splashScreen / gameIntro
 - gameScreen / gameBoard
@@ -55,7 +53,7 @@ Definition of the different states and their transition (transition functions)
 
 
 ## Task
-***
+
 * buildDom
 * buildSplashScreen
 * buildGameScreen
@@ -72,7 +70,6 @@ Definition of the different states and their transition (transition functions)
 * addScore
 
 ## Links
-***
 
 ### Slides
 [Link Slides.com](http://slides.com)
