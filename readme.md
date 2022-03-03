@@ -1,6 +1,6 @@
 # BRICKRISS
 ***
-[Link Deploy](http://github.com)
+[https://rowe32.github.io/Brickriss/]
 
 
 ## Description
@@ -73,3 +73,21 @@ index.js
 
 ### Slides
 [Link Slides.com](http://slides.com)
+
+## Attribution
+
+Attribution Sound:
+
+* Bricks on Bricks: https://freesound.org/people/thanvannispen/sounds/30006/
+* Rubble: https://freesound.org/people/Sheyvan/sounds/569497/
+* Squelch: https://freesound.org/people/redafs/sounds/379499/
+* Let-me-out-of-here-Cry: https://www.pacdv.com/sounds/voices-2.html
+* Videogame-Music: https://www.playonloop.com/2014-music-loops/miracle-park/
+
+Attribution Images & Icons:
+
+* Brickwall Icon https://www.freepik.com/free-icon/brickwall_15529249.htm#query=brick%20wall&position=13&from_view=search (further changed by Renato Costa)
+* Walter Ulbrecht: https://commons.wikimedia.org/wiki/File:Opvolger_van_Pieck,_Walter_Ulbricht,_Bestanddeelnr_911-5926.jpg (further changed by Renato Costa)
+* Old Brickwall: https://www.freepik.com/free-photo/old-brick-wall-background_6087746.htm#query=brick&position=24&from_view=search 
+* Wall of Berlin: https://unsplash.com/photos/oOmqLqq5tio
+* Construction Worker Vector: https://www.freepik.com/free-vector/construction-illustration_5275589.htm#query=construction%20worker&position=35&from_view=search
