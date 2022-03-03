@@ -14,6 +14,8 @@
 
   <body>
 
+    <div id="loadingScreen">Loading...</div>
+
 <!-- GAME INTRO -->
     <div class="game-intro">
 
@@ -22,10 +24,10 @@
         <q>Nobody has the intention of building a wall.</q>
         <p id="quote">- Walter Ulbricht</p>
         <p id="instructions">It’s 1961 – and you can prevent the construction of the Wall. Yes, the very same one.<br><br>
-          Use the arrow keys to move the falling bricks <b>left</b> or <b>right</b> to fit them into the gaps. It’s like Tetris – just with bricks!
+          Use the arrow keys to move the falling bricks <b>left</b> or <b>right</b> to fit them into the gaps.<br><br>It’s like Tetris – just with bricks!
           </p>
         <div id="button-container">
-        <button class="button" id="start-btn">Start Game</button>
+        <button class="button" id="start-btn">START</button>
         </div>
       </div>
         
@@ -37,9 +39,8 @@
       <div id="score">
         <h2>Score</h2>
         <ul>
-          <li>Time:</li>
           <li id="bricksDeleted">Bricks: 0</li>
-          <li>Level:</li>
+          <li id="levelReached">Level: 0</li>
         </ul>
       </div>
     </div>

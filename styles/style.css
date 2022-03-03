@@ -27,7 +27,7 @@ body {
 }
 
 .instructions h1 {
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P', Courier, monospace;
     font-size: 2em;
     text-transform: uppercase;
     letter-spacing: 0.3em;
@@ -65,7 +65,8 @@ body {
 }
 
 #music-Btn {
-    margin: 5rem 0;
+    margin-bottom: 3rem;
+    margin-top: -2rem;
 }
 
 .game-board {
@@ -85,10 +86,11 @@ body {
     position: fixed;
     top: 2em;
     font-weight: bold;
+    margin-bottom: -3vh;
 }
 
 #score > h2 {
-    font-family: 'Press Start 2P';
+    font-family: 'Press Start 2P', Courier, monospace;
 }
 
 #score ul {

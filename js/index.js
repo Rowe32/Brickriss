@@ -5,9 +5,13 @@ let soundInGame = false;
 let gameIntro = document.querySelector(".game-intro");
 let gameBoard = document.querySelector(".game-board");
 let gameOver = document.querySelector(".game-over");
+
 //Screen Text am Ende
-let gameOverText = document.querySelector("#endOfGame")
-let bricksDeleted = document.querySelector('#bricksDeleted')
+let gameOverText = document.querySelector("#endOfGame");
+
+// ScoreElements
+let bricksDeleted = document.querySelector('#bricksDeleted');
+let levelReached = document.querySelector("#levelReached");
 
 //buttons
 let startBtn = document.querySelector("#start-btn");
@@ -23,8 +27,9 @@ let brickImages = [];
 let board = [];             	         // nötig am Ende?
 let bricks = [];
 let lockedBricks = [];
-let startSpeed = 1.5;
+let startSpeed = 1.7;
 let brickScore = 0;
+let level = 0;
 
 //SOUNDS & Music
 let song;
@@ -47,6 +52,7 @@ function preload() {
     cry = loadSound("/sounds/let-me-out-of-here-1.mp3");
     squelch = loadSound("/sounds/Squelch-Sound.mp3");
 }
+
 
 function setup() {
     noLoop();
@@ -135,12 +141,17 @@ function deleteFullBaseline() {
         if (soundInGame) {
             rubbleSound.play();                      // + the hoff erscheint oder aufleuchten der reihe...
         }
-        //change Score
-        brickScore += 6; 
+
+        //update Score
+        brickScore += 6;
         bricksDeleted.innerText = `Bricks: ${brickScore}`;
+        level += 0.5;
+        if (Number.isInteger(level)) {
+            levelReached.innerText = `Level: ${level}`;
+        }
 
         //for each deleted row, increase speed gradually;
-        startSpeed += 0.2;
+        startSpeed += 0.25;
     } 
 }
 
@@ -241,7 +252,15 @@ function endingTheGame() {
     gameBoard.style.display = "none";
     gameOver.style.display = "flex";
     gameOverText.style.visibility='hidden';
+
     noLoop();
+
+    bricks = [];
+    startSpeed = 1.7;
+    brickScore = 0;
+    level = 0;
+    bricksDeleted.innerText = `Bricks: ${brickScore}`;
+    levelReached.innerText = `Level: ${level}`;
 
     if (soundInGame) {
         song.stop();
@@ -300,12 +319,12 @@ window.addEventListener("load", () => {
         gameIntro.style.display = "none";
         gameBoard.style.display = "flex";
         gameOver.style.display = "none";
-    
-        // reset the game to start:
-        bricks = [];
-        newBrick();
-        startSpeed = 1.5;
-        loop();
-        bricksDeleted = 0;              //funktioniert nicht, warum??
+        
+        if (soundInGame) {
+            song.loop(); 
+            song.setVolume(0.1);
+        }
+        newBrick();        
+        loop();               
     });
-})
+});

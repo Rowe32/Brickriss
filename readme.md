@@ -1,42 +1,74 @@
-# Project's name
+# BRICKRISS
 [Link Deploy](http://github.com)
 
 
 ## Description
-Brief description of the project
+***
+BRICKRISS is a game where the player has to move bricks falling down by pressing the arrow keys left or right. Whenever the bottom row fills up with bricks, the row gets deleted, score is updated and the speed increases. The game ends when 10 bricks are stacked on top of each other.
 
 
 ## MVP
-MVP definition, deliverables.
+***
+* game has bricks endlessly falling down
+* the one brick which is falling currently can be moved left and right
+* if bottom row is filled, row is deleted
+* 10 bricks stacking ends the game
+* increase difficulty via faster falling bricks
 
 
 ## Backlog
-Backlog elements.
+***
+* get rid of loading bug at beginning
+* add leaderboard
+* add time played inside score -> to update level not only based on deleted bricks but also based on time played
+* create different sized bricks (and if so update collision js)
+* add David Hasselhoff somewhere (we all know, he was kinda involved in the fall of the Berlin Wall)
 
 
 ## Data structure
-Classes and methods definition. Or functions.
-
+***
+index.js
+* preload() {}
+* setup() {}
+* draw() {}
+* deleteFullBaseline() {}
+* newBrick () {}
+* keyPressed() {}
+* Brick () {this.w; this.h; this.x; this.y; this.image}
+* Cell () {this.i; this.j; this.show}
+* collisionCheck() {}
+* endingTheGame() {}
+* changeBg () {}
+* changeText () {}
 
 ## States y States Transitions
+***
 Definition of the different states and their transition (transition functions)
 
-- splashScreen
-- gameScreen
-- gameoverScreen
-- winScreen
+- splashScreen / gameIntro
+- gameScreen / gameBoard
+- gameoverScreen / gameOver
 
 
 ## Task
-Task definition in order of priority
+***
+* buildDom
+* buildSplashScreen
+* buildGameScreen
+* buildGameOverScreen
+* addEventListener
+* buildCanvas
+* startLoop
+* addFirstBrick
+* addMovement
+* addArrayFallenBricks
+* addCollisionDetection
+* addGameover
+* addDeletionOfRowIfFilled
+* addScore
 
-
-## Additional Links
-
-
-### Trello
-[Link url](https://trello.com)
-
+## Links
+***
 
 ### Slides
 [Link Slides.com](http://slides.com)
