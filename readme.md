@@ -19,7 +19,7 @@ BRICKRISS is a game where the player has to move bricks falling down by pressing
 
 ## Backlog
 
-* get rid of loading bug at beginning (preload image of slowly falling brick...)
+* add preload image of slowly falling brick..
 * make css & html mobile responsive
 * add leaderboard
 * add time played inside the score -> to update level not only based on deleted bricks but also on time played

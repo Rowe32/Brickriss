@@ -28,6 +28,7 @@ let bricks = [];
 let lockedBricks = [];
 let startSpeed = 1.8;
 let brickScore = 0;
+let switchStartCell = 120;
 let level = 0;
 
 //SOUNDS & Music
@@ -137,10 +138,10 @@ class Cell {
 }
 
 class Brick {
-    constructor(img) {
+    constructor(img, switchStartCell) {
         this.w = brickWidth;
         this.h = brickHeight;
-        this.x = 120;                           //-> switch later on if starting at 80 or 120...
+        this.x = switchStartCell;                           //-> switch later on if starting at 80 or 120...
         this.y = 0;                           
         this.image = img;
     }
@@ -168,8 +169,21 @@ class Brick {
 }
 
 function newBrick () {
+    //random brick picture
     let randomImg = brickImages[Math.floor(Math.random() * brickImages.length)];
-    bricks.push(new Brick(randomImg));
+
+    // switch the start position of the brick
+    if (switchStartCell === 120) {
+        switchStartCell = 80;
+    } else {
+        switchStartCell = 120;
+    }
+
+    bricks.push(new Brick(randomImg, switchStartCell));
+
+    //update Score
+    brickScore += 1;
+    bricksDeleted.innerText = `Bricks: ${brickScore}`;
 }
 
 function collisionCheck(rect1, rect2) {
@@ -226,9 +240,7 @@ function deleteFullBaseline() {
             rubbleSound.play();
         }
 
-        //update Score
-        brickScore += 6;
-        bricksDeleted.innerText = `Bricks: ${brickScore}`;
+        //update level Score:
         level += 0.5;
         if (Number.isInteger(level)) {
             levelReached.innerText = `Level: ${level}`;
