@@ -32,7 +32,7 @@ let brickScore = 0;
 let switchStartCell = 120;
 let level = 0;
 
-//SOUNDS & Music & img
+//SOUNDS & MUSIC
 let song;
 let stoneSound;
 let rubbleSound;
@@ -72,7 +72,7 @@ function setup() {
         }
     }
     //init the first "last" Brick
-    newBrick();                          
+    newBrick(); 
 }
 
 function draw() {
@@ -80,7 +80,7 @@ function draw() {
 
     //  Grid on Canvas
     for (let i = 0; i < board.length; i++) {
-        board[i].show();                            
+        board[i].show();
     }
 
     // Display all Bricks on Canvas:
@@ -97,10 +97,12 @@ function draw() {
     // reset height of stones to baseline or check for collision on top of other bricks:
     if ( brick.onGround() || collision.booleanResult ) { 
         if (collision.booleanResult && (brick.x === collision.brick.x)) {
-            brick.y = collision.brick.y - brickHeight;       
+            brick.y = collision.brick.y - brickHeight;  
         } else {
             brick.y = height - brickHeight;
         }
+
+        //Sound for brick on brick:
         if (soundInGame) {
             stoneSound.play();
             stoneSound.setVolume(0.3);
@@ -133,7 +135,7 @@ class Cell {
             stroke(255);
             noFill();
             //creates for Each cell a rectangle
-            rect(x, y, brickWidth, brickHeight);    
+            rect(x, y, brickWidth, brickHeight);
         }; 
     };
 }
@@ -142,22 +144,22 @@ class Brick {
     constructor(img, switchStartCell) {
         this.w = brickWidth;
         this.h = brickHeight;
-        this.x = switchStartCell;                           //-> switch later on if starting at 80 or 120...
-        this.y = 0;                           
+        this.x = switchStartCell;
+        this.y = 0;
         this.image = img;
     }
     
     move() {
         //move the active brick:
-        this.y += startSpeed;     
+        this.y += startSpeed;
     }
     
-    draw() {        
+    draw() {
         image(this.image, this.x, this.y, this.w, this.h);
     }
 
     onGround() {
-        // Check if brick touches the ground:
+        // Check if brick touches ground:
         const brickBottom = this.y + this.h;
         return brickBottom >= height;
     }
@@ -173,7 +175,7 @@ function newBrick () {
     //random brick picture
     let randomImg = brickImages[Math.floor(Math.random() * brickImages.length)];
 
-    // switch the start position of the brick
+    // switch the start position of brick
     if (switchStartCell === 120) {
         switchStartCell = 80;
     } else {
@@ -237,6 +239,7 @@ function deleteFullBaseline() {
         bricks = bricks.filter( brick => brick.y !== 180);
         bricks.slice(0, bricks.length - 1).forEach(remainingBrick => remainingBrick.y += brickHeight);
         
+        // rubble sound:
         if (soundInGame) {
             rubbleSound.play();
         }
@@ -268,17 +271,18 @@ function endingTheGame() {
     bricksDeleted.innerText = `Bricks: ${brickScore}`;
     levelReached.innerText = `Level: ${level}`;
 
+    //stop the music:
     if (soundInGame) {
         song.stop();
     }
 
-    //display text a sec later:
+    //display text a bit later:
     setTimeout(changeBg, 1000);
     setTimeout(changeText, 1500);
-    setTimeout(offerRestartOption, 5000);
+    setTimeout(offerRestartOption, 4600);
 }
 
-//Change Background img & game over Sound
+//Change Background img & add gameover Sound
 function changeBg () {
     gameOver.style.backgroundImage = "url('assets/GameOver_2.png')";
     if (soundInGame) {
@@ -335,7 +339,7 @@ window.addEventListener("load", () => {
             song.loop(); 
             song.setVolume(0.1);
         }
-        newBrick();        
-        loop();               
+        newBrick();
+        loop(); 
     });
 });

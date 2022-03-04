@@ -33,15 +33,20 @@ index.js
 * preload() {}
 * setup() {}
 * draw() {}
-* deleteFullBaseline() {}
-* newBrick () {}
-* keyPressed() {}
-* Brick () {this.w; this.h; this.x; this.y; this.image}
 * Cell () {this.i; this.j; this.show}
+* Brick () {this.w; this.h; this.x; this.y; this.image}
+    * move() {}
+    * draw() {}
+    * onGround() {}
+    * collidesWith() {}
+* newBrick () {}
 * collisionCheck() {}
+* keyPressed() {}
+* deleteFullBaseline() {}
 * endingTheGame() {}
 * changeBg () {}
 * changeText () {}
+* offerRestartOption() {}
 
 ## States y States Transitions
 
