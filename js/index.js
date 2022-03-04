@@ -18,6 +18,7 @@ let startBtn = document.querySelector("#start-btn");
 let restartBtn = document.querySelector("#restart-btn");
 let soundBtn = document.querySelector("#music-Btn");
 
+
 //setting up all variables:
 let wallWidth, wallHeight;
 let brickWidth = 40;
@@ -31,7 +32,7 @@ let brickScore = 0;
 let switchStartCell = 120;
 let level = 0;
 
-//SOUNDS & Music
+//SOUNDS & Music & img
 let song;
 let stoneSound;
 let rubbleSound;
@@ -255,7 +256,8 @@ function endingTheGame() {
     gameIntro.style.display = "none";
     gameBoard.style.display = "none";
     gameOver.style.display = "flex";
-    gameOverText.style.visibility='hidden';
+    gameOverText.style.visibility = "hidden";
+    restartBtn.style.visibility = "hidden";
 
     noLoop();
 
@@ -273,6 +275,7 @@ function endingTheGame() {
     //display text a sec later:
     setTimeout(changeBg, 1000);
     setTimeout(changeText, 1500);
+    setTimeout(offerRestartOption, 5000);
 }
 
 //Change Background img & game over Sound
@@ -286,6 +289,11 @@ function changeBg () {
 
 function changeText () {
     gameOverText.style.visibility='visible';
+}
+
+function offerRestartOption() {
+    gameOver.style.backgroundImage = "url('assets/GameOver_3.jpg')";
+    restartBtn.style.visibility = "visible";
 }
 
 //loading the window and showing the first screen:

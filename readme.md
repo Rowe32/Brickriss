@@ -19,13 +19,11 @@ BRICKRISS is a game where the player has to move bricks falling down by pressing
 
 ## Backlog
 
-* add preload image of slowly falling brick..
+* add preload image of slowly falling brick...
 * make css & html mobile responsive
 * add leaderboard
 * add time played inside the score -> to update level not only based on deleted bricks but also on time played
 * create different sized bricks and add rotation (and if so update collision js!)
-* add different sounds je higher the wall gets stacked (only possible with different sized bricks)
-* add David Hasselhoff somewhere (we all know, he was kinda involved in the fall of the Berlin Wall)
 * funk up the animation whenever a row gets deleted
 
 
@@ -91,3 +89,4 @@ Attribution Images & Icons:
 * Old Brickwall: https://www.freepik.com/free-photo/old-brick-wall-background_6087746.htm#query=brick&position=24&from_view=search 
 * Wall of Berlin: https://unsplash.com/photos/oOmqLqq5tio
 * Construction Worker Vector: https://www.freepik.com/free-vector/construction-illustration_5275589.htm#query=construction%20worker&position=35&from_view=search
+* David Hasselhoff: https://commons.wikimedia.org/wiki/File:David_Hasselhof_at_re-publica_May_2014_(cropped).jpg (further changed by Renato Costa)
